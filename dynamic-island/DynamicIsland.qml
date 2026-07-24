@@ -7,11 +7,9 @@ import Quickshell.Services.Mpris
 Item {
     id: root
 
-    // Fonts
     readonly property string fontText: "SF Pro Text, SF Pro Display, SF Pro, sans-serif"
     readonly property string fontIcon: "JetBrainsMono Nerd Font, JetBrainsMono NF, monospace"
 
-    // Color Palette & Matugen Integration
     property color colorBg: "#0c0c0e"
     property color colorFg: "#ffffff"
     property color colorMuted: "#8e8e93"
@@ -27,7 +25,6 @@ Item {
         Component.onCompleted: parseColors()
 
         function parseColors() {
-            // FIXED: Using text property instead of text() method call
             let raw = matugenFile.text || ""; 
             if (!raw) return;
             try {
@@ -47,7 +44,6 @@ Item {
         }
     }
 
-    // FIXED: Changed list to var so JavaScript array prototypes (like .find) work
     readonly property var playerList: Mpris.players.values
     readonly property MprisPlayer activePlayer: {
         if (!playerList || playerList.length === 0) return null;
@@ -59,7 +55,6 @@ Item {
     readonly property string currentTrack: activePlayer ? (activePlayer.trackTitle || "") : ""
     readonly property string currentArtist: activePlayer ? (activePlayer.trackArtist || "") : ""
 
-    // Persistent Album Artwork Latching (Firefox/Floorp Fix)
     property string currentArtUrl: ""
     property string lastTrackTitle: ""
 
@@ -101,7 +96,6 @@ Item {
         let raw = activePlayer.trackArtUrl || "";
         let currentTitle = activePlayer.trackTitle || "";
 
-        // FIXED: Lock the artwork if the track hasn't changed to stop browser wipes
         if (currentTitle !== lastTrackTitle) {
             lastTrackTitle = currentTitle;
             if (raw !== "") {
@@ -124,7 +118,6 @@ Item {
         return url;
     }
 
-    // Hover Hysteresis & Expansion Logic
     readonly property bool isHovered: hoverArea.containsMouse || collapseTimer.running
     readonly property bool autoExpanded: autoShowTimer.running
     readonly property bool expanded: isHovered || autoExpanded
@@ -149,9 +142,7 @@ Item {
         if (isPlaying) autoShowTimer.restart();
     }
 
-    // Live Progress Position Updater (Required by MPRIS specifications)
     Timer {
-        // Quickshell's Mpris length and position natively report in seconds
         interval: 1000
         running: root.isPlaying && root.expanded
         repeat: true
@@ -160,7 +151,6 @@ Item {
         }
     }
 
-    // Dynamic Island Geometry
     width: !isPlaying ? 0 : (expanded ? 380 : 210)
     height: !isPlaying ? 0 : (expanded ? 108 : 36)
     opacity: isPlaying ? 1.0 : 0.0
@@ -197,7 +187,6 @@ Item {
             }
         }
 
-        // 1. COLLAPSED CONTENT (MINI PILL)
         Item {
             anchors.fill: parent
             anchors.leftMargin: 8
@@ -266,7 +255,6 @@ Item {
             }
         }
 
-        // 2. EXPANDED CONTENT (FULL PLAYER)
         Item {
             anchors.fill: parent
             anchors.margins: 14
@@ -307,7 +295,6 @@ Item {
                 }
             }
 
-            // Track Info (Middle)
             Column {
                 anchors.left: expandedArtFrame.right
                 anchors.right: controlsRow.left
@@ -363,7 +350,6 @@ Item {
                         }
                     }
 
-                    // Elapsed Time
                     Text {
                         anchors.left: parent.left
                         anchors.top: progressBg.bottom
@@ -391,7 +377,6 @@ Item {
                 }
             }
 
-            // Controls (Right)
             Row {
                 id: controlsRow
                 anchors.right: parent.right
@@ -418,7 +403,6 @@ Item {
                     }
                 }
 
-                // Play/Pause
                 Rectangle {
                     width: 36
                     height: 36
@@ -445,7 +429,6 @@ Item {
                     }
                 }
 
-                // Next
                 Text {
                     text: "󰒭"
                     font.family: root.fontIcon
