@@ -5,6 +5,7 @@ Just a simple recreation of dynamic islands we found on our phones.
 1. Quickshell.
 2. MPRIS (auto installed on most new systems).
 3. Matugen (optional, for color theme generation).
+4. San Francisco, Jetbrains MonoNerd Fonts.
 
 ## What you will need to do:
 1. Clone this repository either via `git clone https://github.com/ps2string/quickshell-simple-dynisland/` for via `Download .ZIP` from "Code" > "Local" > "Download .ZIP".
