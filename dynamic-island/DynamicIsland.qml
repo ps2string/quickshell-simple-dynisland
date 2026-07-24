@@ -3,6 +3,7 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Mpris
+import Quickshell.Widgets
 
 Item {
     id: root
@@ -102,10 +103,10 @@ Item {
                 artFetchTimer.stop();
                 currentArtUrl = formatArtUrl(raw);
             } else {
-                artFetchTimer.restart(); // Wait for late metadata
+                artFetchTimer.restart(); 
             }
         } else if (currentArtUrl === "" && raw !== "") {
-            // Accept late metadata if we don't have art yet
+ 
             artFetchTimer.stop();
             currentArtUrl = formatArtUrl(raw);
         }
@@ -179,7 +180,6 @@ Item {
             onEntered: collapseTimer.stop()
             onExited: collapseTimer.start()
             
-            // Clicking the collapsed pill toggles play/pause quickly
             onClicked: {
                 if (!root.expanded && root.activePlayer && root.activePlayer.canTogglePlaying) {
                     root.activePlayer.togglePlaying();
@@ -196,11 +196,11 @@ Item {
 
             Behavior on opacity { NumberAnimation { duration: 150 } }
 
-            Rectangle {
+            ClippingRectangle {
                 id: collapsedArtFrame
                 width: 22
                 height: 22
-                radius: 11
+                radius: width / 2
                 color: Qt.alpha(root.colorMuted, 0.2)
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
@@ -264,8 +264,7 @@ Item {
 
             Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.OutQuad } }
 
-            // Album Artwork (Left)
-            Rectangle {
+            ClippingRectangle {
                 id: expandedArtFrame
                 width: 78
                 height: 78
@@ -322,7 +321,6 @@ Item {
                     elide: Text.ElideRight
                 }
 
-                // Progress Bar
                 Item {
                     width: parent.width
                     height: 16
@@ -360,7 +358,6 @@ Item {
                         color: root.colorMuted
                     }
 
-                    // FIXED: Remaining Time Countdown
                     Text {
                         anchors.right: parent.right
                         anchors.top: progressBg.bottom
@@ -383,7 +380,6 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 12
 
-                // Previous
                 Text {
                     text: "󰒮"
                     font.family: root.fontIcon
