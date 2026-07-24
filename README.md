@@ -36,3 +36,5 @@ output_path = "~/.cache/matugen/colors.json"
 
 ### Preview:
 <img width="397" height="119" alt="image" src="https://github.com/user-attachments/assets/5c1c4b54-bfe6-40fb-89bd-c22d7d1b4f4b" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/2f8b2d18-3089-40f4-9fcd-6216ae783017" />
+
