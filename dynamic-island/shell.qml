@@ -16,15 +16,9 @@ ShellRoot {
                     top: true
                 }
 
-                // FIXED: Top layer avoids overlaying fullscreen applications.
                 WlrLayershell.layer: WlrLayer.Top
-                
-                // FIXED: Prevents window from stealing desktop space from maximized apps.
                 exclusionMode: ExclusionMode.Ignore
-
                 color: "transparent"
-                
-                // FIXED: Explicit dimensions required by Wayland layer shell masking.
                 width: 420
                 height: 130
 
