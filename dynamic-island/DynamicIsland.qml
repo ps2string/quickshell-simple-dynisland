@@ -8,14 +8,13 @@ import Quickshell.Widgets
 Item {
     id: root
 
-    // Fonts
     readonly property string fontText: "SF Pro Text, SF Pro Display, SF Pro, sans-serif"
     readonly property string fontIcon: "JetBrainsMono Nerd Font, JetBrainsMono NF, monospace"
 
-    // --- Color Palette & Matugen Integration ---
     FileView {
         id: matugenFile
         path: Quickshell.env("HOME") + "/.config/quickshell/dynamic-island/colors.json"
+        onFileChanged: matugenFile.reload()
         watchChanges: true
         blockLoading: true
     }
@@ -37,7 +36,6 @@ Item {
     property color colorPrimary: rawColors.primary || "#007aff"
     property color colorBorder:  rawColors.outline_variant || rawColors.outline || "#222228"
 
-    // --- MPRIS Active Player Logic ---
     readonly property var playerList: Mpris.players.values
     readonly property MprisPlayer activePlayer: {
         if (!playerList || playerList.length === 0) return null;
