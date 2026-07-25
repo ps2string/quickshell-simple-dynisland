@@ -30,12 +30,17 @@ Just a simple recreation of dynamic islands we found on our phones.
 ```
 - For `config.toml`
 ```toml
+[config]
+# Any configuration, just put here. (i have none)
+
 [templates.json]
 input_path = "~/.config/matugen/templates/colors.json"
-output_path = "~/.cache/matugen/colors.json"
+output_path = "~/.config/quickshell/dynamic-island/colors.json"
 ```
 
 ### Preview:
 <img width="397" height="119" alt="image" src="https://github.com/user-attachments/assets/5c1c4b54-bfe6-40fb-89bd-c22d7d1b4f4b" />
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/2f8b2d18-3089-40f4-9fcd-6216ae783017" />
+
+<img width="341" height="79" alt="image" src="https://github.com/user-attachments/assets/4115305e-14d1-46cb-b375-ee8896fa5895" />
+
 
