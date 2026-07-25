@@ -8,43 +8,36 @@ import Quickshell.Widgets
 Item {
     id: root
 
+    // Fonts
     readonly property string fontText: "SF Pro Text, SF Pro Display, SF Pro, sans-serif"
     readonly property string fontIcon: "JetBrainsMono Nerd Font, JetBrainsMono NF, monospace"
 
-    property color colorBg: "#0c0c0e"
-    property color colorFg: "#ffffff"
-    property color colorMuted: "#8e8e93"
-    property color colorPrimary: "#007aff"
-    property color colorBorder: "#222228"
-
+    // --- Color Palette & Matugen Integration ---
     FileView {
         id: matugenFile
-        path: (Quickshell.env("HOME") || "") + "/.cache/matugen/colors.json"
+        path: Quickshell.env("HOME") + "/.config/quickshell/dynamic-island/colors.json"
         watchChanges: true
-        onFileChanged: parseColors()
-        onTextChanged: parseColors()
-        Component.onCompleted: parseColors()
+        blockLoading: true
+    }
 
-        function parseColors() {
-            let raw = matugenFile.text || ""; 
-            if (!raw) return;
-            try {
-                let json = JSON.parse(raw);
-                let c = json.colors || json;
-                if (c) {
-                    if (c.surface_container) root.colorBg = c.surface_container;
-                    else if (c.surface) root.colorBg = c.surface;
-
-                    if (c.on_surface) root.colorFg = c.on_surface;
-                    if (c.on_surface_variant) root.colorMuted = c.on_surface_variant;
-                    if (c.primary) root.colorPrimary = c.primary;
-                    if (c.outline_variant) root.colorBorder = c.outline_variant;
-                    else if (c.outline) root.colorBorder = c.outline;
-                }
-            } catch(e) {}
+    readonly property var rawColors: {
+        try {
+            let data = matugenFile.text();
+            if (!data) return {};
+            let parsed = JSON.parse(data);
+            return parsed.colors || parsed;
+        } catch(e) {
+            return {};
         }
     }
 
+    property color colorBg:      rawColors.surface_container || rawColors.surface || "#0c0c0e"
+    property color colorFg:      rawColors.on_surface || "#ffffff"
+    property color colorMuted:   rawColors.on_surface_variant || "#8e8e93"
+    property color colorPrimary: rawColors.primary || "#007aff"
+    property color colorBorder:  rawColors.outline_variant || rawColors.outline || "#222228"
+
+    // --- MPRIS Active Player Logic ---
     readonly property var playerList: Mpris.players.values
     readonly property MprisPlayer activePlayer: {
         if (!playerList || playerList.length === 0) return null;
@@ -103,10 +96,9 @@ Item {
                 artFetchTimer.stop();
                 currentArtUrl = formatArtUrl(raw);
             } else {
-                artFetchTimer.restart(); 
+                artFetchTimer.restart();
             }
         } else if (currentArtUrl === "" && raw !== "") {
- 
             artFetchTimer.stop();
             currentArtUrl = formatArtUrl(raw);
         }
@@ -152,6 +144,7 @@ Item {
         }
     }
 
+    // Geometry
     width: !isPlaying ? 0 : (expanded ? 380 : 210)
     height: !isPlaying ? 0 : (expanded ? 108 : 36)
     opacity: isPlaying ? 1.0 : 0.0
@@ -187,6 +180,7 @@ Item {
             }
         }
 
+        // 1. COLLAPSED CONTENT (MINI PILL)
         Item {
             anchors.fill: parent
             anchors.leftMargin: 8
@@ -208,7 +202,7 @@ Item {
 
                 Text {
                     anchors.centerIn: parent
-                    text: "󰎈"
+                    text: "\uf001"
                     font.family: root.fontIcon
                     font.pixelSize: 11
                     color: root.colorPrimary
@@ -245,7 +239,7 @@ Item {
                 id: collapsedStatusIcon
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
-                text: "󰎆"
+                text: "\uf001"
                 font.family: root.fontIcon
                 font.pixelSize: 14
                 color: root.colorPrimary
@@ -255,6 +249,7 @@ Item {
             }
         }
 
+        // 2. EXPANDED CONTENT (FULL PLAYER)
         Item {
             anchors.fill: parent
             anchors.margins: 14
@@ -264,11 +259,12 @@ Item {
 
             Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.OutQuad } }
 
+            // Album Artwork (Left)
             ClippingRectangle {
                 id: expandedArtFrame
                 width: 78
                 height: 78
-                radius: 12
+                radius: width / 2
                 color: Qt.alpha(root.colorMuted, 0.2)
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
@@ -276,7 +272,7 @@ Item {
 
                 Text {
                     anchors.centerIn: parent
-                    text: "󰎈"
+                    text: "\uf001"
                     font.family: root.fontIcon
                     font.pixelSize: 32
                     color: root.colorPrimary
@@ -294,6 +290,7 @@ Item {
                 }
             }
 
+            // Track Info (Middle)
             Column {
                 anchors.left: expandedArtFrame.right
                 anchors.right: controlsRow.left
@@ -321,6 +318,7 @@ Item {
                     elide: Text.ElideRight
                 }
 
+                // Progress Bar
                 Item {
                     width: parent.width
                     height: 16
@@ -348,6 +346,7 @@ Item {
                         }
                     }
 
+                    // Elapsed Time
                     Text {
                         anchors.left: parent.left
                         anchors.top: progressBg.bottom
@@ -358,6 +357,7 @@ Item {
                         color: root.colorMuted
                     }
 
+                    // Remaining Time Countdown
                     Text {
                         anchors.right: parent.right
                         anchors.top: progressBg.bottom
@@ -374,14 +374,16 @@ Item {
                 }
             }
 
+            // Controls (Right)
             Row {
                 id: controlsRow
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 12
 
+                // Previous
                 Text {
-                    text: "󰒮"
+                    text: "\uf048"
                     font.family: root.fontIcon
                     font.pixelSize: 22
                     color: prevMouse.containsMouse ? root.colorPrimary : root.colorFg
@@ -399,6 +401,7 @@ Item {
                     }
                 }
 
+                // Play/Pause
                 Rectangle {
                     width: 36
                     height: 36
@@ -408,9 +411,9 @@ Item {
 
                     Text {
                         anchors.centerIn: parent
-                        text: root.isPlaying ? "󰏤" : "󰐊"
+                        text: root.isPlaying ? "\uf04c" : "\uf04b"
                         font.family: root.fontIcon
-                        font.pixelSize: 20
+                        font.pixelSize: 18
                         color: root.colorFg
                         anchors.horizontalCenterOffset: root.isPlaying ? 0 : 2
                     }
@@ -425,8 +428,9 @@ Item {
                     }
                 }
 
+                // Next
                 Text {
-                    text: "󰒭"
+                    text: "\uf051"
                     font.family: root.fontIcon
                     font.pixelSize: 22
                     color: nextMouse.containsMouse ? root.colorPrimary : root.colorFg
