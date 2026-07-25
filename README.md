@@ -14,7 +14,7 @@ Just a simple recreation of dynamic islands we found on our phones.
 4. To run it, just type in `qs -p ~/.config/quickshell/dynamic-island` inside your terminal.
 
 ### For color theming
-- Your matugen `colors.json` should have this inside:
+- Your matugen `colors.json` (`~/.config/matugen/templates/`) should have this inside:
 ```json
 {
   "colors": {
@@ -28,7 +28,7 @@ Just a simple recreation of dynamic islands we found on our phones.
   }
 }
 ```
-- For `config.toml`
+- For `config.toml` (`~/.config/matugen/`)
 ```toml
 [config]
 # Any configuration, just put here. (i have none)
