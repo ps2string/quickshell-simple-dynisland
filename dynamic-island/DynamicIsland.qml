@@ -14,8 +14,8 @@ Item {
     FileView {
         id: matugenFile
         path: Quickshell.env("HOME") + "/.config/quickshell/dynamic-island/colors.json"
-        onFileChanged: matugenFile.reload()
         watchChanges: true
+        onFileChanged: matugenFile.reload()
         blockLoading: true
     }
 
@@ -109,7 +109,11 @@ Item {
         return url;
     }
 
-    readonly property bool isHovered: hoverArea.containsMouse || collapseTimer.running
+    readonly property bool isHovered: hoverArea.containsMouse 
+                                   || prevMouse.containsMouse 
+                                   || playMouse.containsMouse 
+                                   || nextMouse.containsMouse 
+                                   || collapseTimer.running
     readonly property bool autoExpanded: autoShowTimer.running
     readonly property bool expanded: isHovered || autoExpanded
 
@@ -142,7 +146,6 @@ Item {
         }
     }
 
-    // Geometry
     width: !isPlaying ? 0 : (expanded ? 380 : 210)
     height: !isPlaying ? 0 : (expanded ? 108 : 36)
     opacity: isPlaying ? 1.0 : 0.0
@@ -178,7 +181,6 @@ Item {
             }
         }
 
-        // 1. COLLAPSED CONTENT (MINI PILL)
         Item {
             anchors.fill: parent
             anchors.leftMargin: 8
@@ -247,7 +249,6 @@ Item {
             }
         }
 
-        // 2. EXPANDED CONTENT (FULL PLAYER)
         Item {
             anchors.fill: parent
             anchors.margins: 14
@@ -257,7 +258,6 @@ Item {
 
             Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.OutQuad } }
 
-            // Album Artwork (Left)
             ClippingRectangle {
                 id: expandedArtFrame
                 width: 78
@@ -288,7 +288,6 @@ Item {
                 }
             }
 
-            // Track Info (Middle)
             Column {
                 anchors.left: expandedArtFrame.right
                 anchors.right: controlsRow.left
@@ -316,7 +315,6 @@ Item {
                     elide: Text.ElideRight
                 }
 
-                // Progress Bar
                 Item {
                     width: parent.width
                     height: 16
@@ -344,7 +342,6 @@ Item {
                         }
                     }
 
-                    // Elapsed Time
                     Text {
                         anchors.left: parent.left
                         anchors.top: progressBg.bottom
@@ -355,7 +352,6 @@ Item {
                         color: root.colorMuted
                     }
 
-                    // Remaining Time Countdown
                     Text {
                         anchors.right: parent.right
                         anchors.top: progressBg.bottom
@@ -372,14 +368,12 @@ Item {
                 }
             }
 
-            // Controls (Right)
             Row {
                 id: controlsRow
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 12
 
-                // Previous
                 Text {
                     text: "\uf048"
                     font.family: root.fontIcon
@@ -399,7 +393,6 @@ Item {
                     }
                 }
 
-                // Play/Pause
                 Rectangle {
                     width: 36
                     height: 36
@@ -426,7 +419,6 @@ Item {
                     }
                 }
 
-                // Next
                 Text {
                     text: "\uf051"
                     font.family: root.fontIcon
