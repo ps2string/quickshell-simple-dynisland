@@ -43,6 +43,7 @@ output_path = "~/.config/quickshell/dynamic-island/colors.json"
 <img width="397" height="119" alt="image" src="https://github.com/user-attachments/assets/5c1c4b54-bfe6-40fb-89bd-c22d7d1b4f4b" />
 
 - Now:
-<img width="341" height="79" alt="image" src="https://github.com/user-attachments/assets/4115305e-14d1-46cb-b375-ee8896fa5895" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/adb9b2fd-e2ab-4c38-8308-92c3129ed3db" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/4d977c2d-5b83-485b-8147-343a9db2cded" />
 
 
